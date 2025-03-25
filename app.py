@@ -18,8 +18,18 @@ if 'form_data' not in st.session_state:
 
 # Set up Google Sheets and Drive API
 scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-creds = ServiceAccountCredentials.from_json_keyfile_name('credentials.json', scope)
+#creds = ServiceAccountCredentials.from_json_keyfile_name('credentials.json', scope)
+#client = gspread.authorize(creds)
+# Retrieve credentials from secrets
+creds_dict = st.secrets["gcp_service_account"]
+
+# Create credentials from the dictionary
+creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
+
+# Authorize gspread client for Google Sheets
 client = gspread.authorize(creds)
+
+# Build the Drive API service
 drive_service = build('drive', 'v3', credentials=creds)
 
 # Google Sheets setup
